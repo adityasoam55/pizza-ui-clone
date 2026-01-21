@@ -1,8 +1,7 @@
 import axios from "axios";
 
 export const getPizzas = async () => {
-  const response = await axios.get(
-    "https://api.hothousenorthwood.co.uk/api/v1/pizza"
-  );
+  const response = await aaxios.get("/.netlify/functions/pizzas");
+
   return response.data.data;
 };
