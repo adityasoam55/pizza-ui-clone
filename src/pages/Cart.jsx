@@ -12,58 +12,69 @@ function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="text-center py-20 text-xl font-semibold">
-        Your cart is empty 🛒
+      <div className="pt-40 text-center text-xl font-semibold">
+        Your cart is empty
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
+    <div className="pt-40 px-4 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {cartItems.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between border p-4 rounded-md"
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border rounded-lg p-4"
           >
-            {/* Left */}
-            <div className="flex items-center gap-4">
+            {/* LEFT: Image + Info */}
+            <div className="flex gap-4">
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-20 h-20 object-cover rounded"
+                className="w-20 h-20 object-cover rounded-md"
               />
 
-              <div>
-                <h2 className="font-semibold text-lg">{item.name}</h2>
-                <p className="text-sm text-gray-600">Size: {item.size}</p>
-                <p className="font-bold text-red-800">£{item.price}</p>
+              <div className="flex flex-col">
+                {/* FIX 1: Name wrapping */}
+                <h3 className="text-lg font-semibold wrap-break-words whitespace-normal sm:whitespace-nowrap">
+                  {item.name}
+                </h3>
+
+                <span className="text-sm text-gray-600">Size: {item.size}</span>
+
+                <span className="text-red-700 font-bold mt-1">
+                  £{item.price.toFixed(2)}
+                </span>
               </div>
             </div>
 
-            {/* Right */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => dispatch(decreaseQty(item.id))}
-                className="px-3 py-1 border rounded"
-              >
-                −
-              </button>
+            {/* RIGHT: Controls */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+              {/* Quantity */}
+              <div className="flex items-center gap-2">
+                <button
+                  className="border px-3 py-1 rounded text-lg"
+                  onClick={() => dispatch(decreaseQty(item.id))}
+                >
+                  −
+                </button>
 
-              <span className="font-semibold">{item.qty}</span>
+                <span className="min-w-6 text-center">{item.qty}</span>
 
-              <button
-                onClick={() => dispatch(increaseQty(item.id))}
-                className="px-3 py-1 border rounded"
-              >
-                +
-              </button>
+                <button
+                  className="border px-3 py-1 rounded text-lg"
+                  onClick={() => dispatch(increaseQty(item.id))}
+                >
+                  +
+                </button>
+              </div>
 
+              {/* Remove */}
               <button
+                className="text-red-600 font-semibold hover:underline"
                 onClick={() => dispatch(removeItem(item.id))}
-                className="text-red-600 font-semibold"
               >
                 Remove
               </button>
@@ -72,9 +83,9 @@ function Cart() {
         ))}
       </div>
 
-      {/* Total */}
-      <div className="text-right mt-8 text-2xl font-bold">
-        Total: £{totalPrice}
+      {/* TOTAL */}
+      <div className="flex justify-end mt-8">
+        <div className="text-xl font-bold">Total: £{totalPrice}</div>
       </div>
     </div>
   );
