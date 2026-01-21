@@ -12,14 +12,14 @@ function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="pt-40 text-center text-xl font-semibold">
+      <div className="py-10 text-center text-xl font-semibold">
         Your cart is empty
       </div>
     );
   }
 
   return (
-    <div className="pt-40 px-4 max-w-5xl mx-auto">
+    <div className="py-10 px-4 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
       <div className="space-y-4">

@@ -3,7 +3,7 @@ import { getPizzas } from "../services/pizzaApi";
 import PizzaCard from "../components/PizzaCard";
 
 function PizzaMenu() {
-  const [pizzas, setPizzas] = useState([]);
+  const [pizzas, setPizzas] = useState([]); // always array
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
 
@@ -11,9 +11,12 @@ function PizzaMenu() {
     const fetchPizzas = async () => {
       try {
         const data = await getPizzas();
-        setPizzas(data);
+
+        // ✅ SAFETY: ensure array
+        setPizzas(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Failed to fetch pizzas", error);
+        setPizzas([]); // prevent undefined
       } finally {
         setLoading(false);
       }
@@ -26,11 +29,11 @@ function PizzaMenu() {
   const filteredPizzas =
     activeFilter === "All"
       ? pizzas
-      : pizzas.filter((pizza) => pizza.filter?.filter === activeFilter);
+      : pizzas.filter((pizza) => pizza?.filter?.filter === activeFilter);
 
-  /* ---------------- GROUP BY CATEGORY ---------------- */
-  const groupedPizzas = filteredPizzas.reduce((acc, pizza) => {
-    const categoryName = pizza.category?.category || "Other Pizzas";
+  /* ---------------- GROUP BY CATEGORY (SAFE) ---------------- */
+  const groupedPizzas = (filteredPizzas || []).reduce((acc, pizza) => {
+    const categoryName = pizza?.category?.category || "Other Pizzas";
 
     if (!acc[categoryName]) {
       acc[categoryName] = [];
@@ -41,11 +44,14 @@ function PizzaMenu() {
   }, {});
 
   /* ---------------- CATEGORY COLOR HELPER ---------------- */
-  const getCategoryColor = (category) => {
-    if (category === "MEAT" || category === "HALAL") {
-      return "red-800";
-    }
-    return "green-800";
+  const getCategoryClasses = (category) => {
+    const isRed =
+      category.toUpperCase().includes("MEAT") ||
+      category.toUpperCase().includes("HALAL");
+
+    return isRed
+      ? "text-red-800 border-red-800"
+      : "text-green-800 border-green-800";
   };
 
   if (loading) {
@@ -79,35 +85,33 @@ function PizzaMenu() {
 
       {/* ---------------- CATEGORIES ---------------- */}
       <div className="max-w-7xl mx-auto px-4 space-y-14 pb-20">
-        {Object.entries(groupedPizzas).map(([category, items]) => (
-          <div key={category}>
-            {/* Category Heading */}
-            <div className="flex items-center justify-center mb-2 p-5">
-              <div
-                className={`grow border-t border-${getCategoryColor(category)}`}
-              ></div>
+        {Object.entries(groupedPizzas).map(([category, items]) => {
+          const colorClasses = getCategoryClasses(category);
 
-              <h2
-                className={`px-4 font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-${getCategoryColor(
-                  category,
-                )}`}
-              >
-                {category}
-              </h2>
+          return (
+            <div key={category}>
+              {/* Category Heading */}
+              <div className="flex items-center justify-center mb-2 p-5">
+                <div className={`grow border-t ${colorClasses}`} />
 
-              <div
-                className={`grow border-t border-${getCategoryColor(category)}`}
-              ></div>
+                <h2
+                  className={`px-4 font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl ${colorClasses}`}
+                >
+                  {category}
+                </h2>
+
+                <div className={`grow border-t ${colorClasses}`} />
+              </div>
+
+              {/* Pizza Cards */}
+              <div className="flex gap-11 flex-wrap justify-center">
+                {items.map((pizza) => (
+                  <PizzaCard key={pizza._id} pizza={pizza} />
+                ))}
+              </div>
             </div>
-
-            {/* Pizza Cards */}
-            <div className="flex gap-11 flex-wrap justify-center">
-              {items.map((pizza) => (
-                <PizzaCard key={pizza._id} pizza={pizza} />
-              ))}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
