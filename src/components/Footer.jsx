@@ -11,61 +11,6 @@ import {
 function Footer() {
   return (
     <div className="h-full flex flex-col bg-red-800 py-4 text-white">
-      <div
-        className="CookieConsent fixed bottom-0 left-0 w-full z-9999 flex flex-wrap justify-between items-center"
-        style={{
-          background: "rgb(43, 55, 59)",
-          color: "#fff",
-          padding: "10px 16px",
-          fontSize: "13.5px",
-          lineHeight: "1.4",
-        }}
-      >
-        <div style={{ flex: "1 1 auto", margin: "15px 0 0" }}>
-          <span>
-            We use cookies to enhance your browsing experience.{" "}
-            <a
-              href="/cookie-policy"
-              className="underline text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              Learn more
-            </a>
-          </span>
-        </div>
-
-        <div>
-          <button
-            id="rcc-decline-button"
-            aria-label="Decline cookies"
-            style={{
-              background: "rgb(153, 153, 153)",
-              borderRadius: "5px",
-              padding: "6px 14px",
-              margin: "15px 6px 15px 15px",
-              fontSize: "13px",
-              color: "#000",
-            }}
-          >
-            Decline
-          </button>
-
-          <button
-            id="rcc-confirm-button"
-            aria-label="Accept cookies"
-            style={{
-              background: "rgb(22, 101, 52)",
-              borderRadius: "5px",
-              padding: "6px 14px",
-              margin: "15px",
-              fontSize: "13px",
-              color: "#fff",
-            }}
-          >
-            Accept
-          </button>
-        </div>
-      </div>
-
       {/* Main Footer Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 justify-center px-4 text-white">
         {/* Social Links */}
